@@ -28,7 +28,7 @@ class Employeeterritory extends Model
 	protected $casts = [
 		'EmployeeID' => 'int'
 	];
-
+	
 	public function employee()
 	{
 		return $this->belongsTo(Employee::class, 'EmployeeID');

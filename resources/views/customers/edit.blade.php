@@ -21,6 +21,21 @@
                 <label for="ContactTitle">Contact Title</label>
                 <input type="text" name="ContactTitle" id="ContactTitle" class="form-control" value="{{ $customer->ContactTitle }}">
             </div>
+            <div class="form-group">
+                    <label>Demografski podaci:</label>
+                     @foreach ($demographics as $demo)
+                            <div class="form-check">
+                                <input type="checkbox" name="demographics[]" value="{{ $demo->CustomerTypeID }}" 
+                                    class="form-check-input"
+                                    id="demo_{{ $demo->CustomerTypeID }}"
+                                    {{ isset($customer) && $customer->demographics->contains($demo->CustomerTypeID) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="demo_{{ $demo->CustomerTypeID }}">
+                                    {{ $demo->CustomerDesc }}
+                                </label>
+                           </div>
+                    @endforeach
+            </div>
+
             <!-- Add other fields as necessary -->
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>

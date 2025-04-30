@@ -44,13 +44,11 @@
             <label for="UnitPrice" class="form-label">Price</label>
             <input type="number" step="0.01" class="form-control" name="UnitPrice" value="{{ $product->UnitPrice }}">
         </div>
-
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="Discontinued" value="1" 
                 {{ $product->Discontinued ? 'checked' : '' }}>
             <label class="form-check-label">Discontinued</label>
         </div>
-
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
     </form>

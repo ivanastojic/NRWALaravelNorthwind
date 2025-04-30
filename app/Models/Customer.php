@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,10 +32,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Customer extends Model
 {
+	use HasFactory;
 	protected $table = 'customers';
 	protected $primaryKey = 'CustomerID';
 	public $incrementing = false;
 	public $timestamps = false;
+	//protected $keyType = 'string';
+
 
 	protected $fillable = [
 		'CustomerID',
@@ -59,4 +63,8 @@ class Customer extends Model
 	{
 		return $this->hasMany(Order::class, 'CustomerID');
 	}
+	public function demographics()
+    {
+        return $this->belongsToMany(CustomerDemographic::class, 'customercustomerdemo', 'CustomerID', 'CustomerTypeID');
+    }
 }

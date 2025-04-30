@@ -13,6 +13,7 @@
                     <th>CustomerID</th>
                     <th>Company Name</th>
                     <th>Contact Name</th>
+                    <th>Demographics</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -22,6 +23,11 @@
                         <td>{{ $customer->CustomerID }}</td>
                         <td>{{ $customer->CompanyName }}</td>
                         <td>{{ $customer->ContactName }}</td>
+                        <td>
+                            @foreach ($customer->demographics as $demographic)
+                                <span class="badge badge-secondary text-light">{{ $demographic->CustomerTypeID }}</span>
+                            @endforeach
+                        </td>
                         <td>
                             <a href="{{ route('customers.edit', $customer->CustomerID) }}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('customers.destroy', $customer->CustomerID) }}" method="POST" style="display:inline;">

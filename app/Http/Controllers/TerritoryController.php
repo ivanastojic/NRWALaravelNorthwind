@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Territory;
 use App\Models\Region;
 use Illuminate\Http\Request;
+use App\Models\Employee;
+
 
 class TerritoryController extends Controller
 {
@@ -51,26 +53,35 @@ class TerritoryController extends Controller
     public function edit($id)
     {
         $territory = Territory::findOrFail($id);
+        $employees = Employee::all(); // Svi zaposlenici
         $regions = Region::all();
-        return view('territories.edit', compact('territory', 'regions'));
+        return view('territories.edit', compact('territory', 'employees', 'regions'));
     }
 
-    
     public function update(Request $request, $id)
     {
+        $territory = Territory::findOrFail($id);
+
+        // Validacija podataka
         $request->validate([
-            'TerritoryDescription' => 'required',
+            'TerritoryDescription' => 'required|string',
             'RegionID' => 'required|exists:region,RegionID',
+            'employees' => 'array',
+            'employees.*' => 'exists:employees,EmployeeID',
         ]);
 
-        $territory = Territory::findOrFail($id);
+        // Ažuriraj podatke teritorija
         $territory->update([
             'TerritoryDescription' => $request->TerritoryDescription,
             'RegionID' => $request->RegionID,
         ]);
 
-        return redirect()->route('territories.index');
+        // Ažuriraj zaposlenike na teritoriju
+        $territory->employees()->sync($request->employees); // sync će povezati zaposlenike s teritorijem
+
+        return redirect()->route('territories.index')->with('success', 'Territorij i zaposlenici ažurirani.');
     }
+
 
     
     public function destroy($id)

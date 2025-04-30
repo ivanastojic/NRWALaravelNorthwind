@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderDetail extends Model
 {
-	protected $table = 'order details';
+	protected $table = 'order_details';
 	public $incrementing = false;
 	public $timestamps = false;
 

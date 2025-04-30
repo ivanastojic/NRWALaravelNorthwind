@@ -55,17 +55,29 @@ class CustomerdemographicController extends Controller
         ]);
 
         $customerdemographic = Customerdemographic::findOrFail($id);
-        $customerdemographic->update($request->all());
-
-        return redirect()->route('customerdemographics.index');
+        $customerdemographic->update([
+            'CustomerTypeID' => $request->input('CustomerTypeID'),
+            'CustomerDesc' => $request->input('CustomerDesc'),
+        ]);
+    
+        // Preusmjeri na popis s uspješnom porukom
+        return redirect()->route('customerdemographics.index')->with('success', 'Customer demographic updated successfully.');
     }
 
     // Brisanje Customerdemographic
     public function destroy($id)
     {
-        $customerdemographic = Customerdemographic::findOrFail($id);
-        $customerdemographic->delete();
-
-        return redirect()->route('customerdemographics.index');
+        // Pronađi demografski zapis
+        $demographic = \App\Models\Customerdemographic::findOrFail($id);
+    
+        // Odspoji sve povezane kupce (pomoću pivot tablice)
+        $demographic->customers()->detach();
+    
+        // Obriši demografski zapis
+        $demographic->delete();
+    
+        // Vrati se na listu s porukom
+        return redirect()->route('customerdemographics.index')->with('success', 'Demografski podatak uspješno obrisan.');
     }
+    
 }

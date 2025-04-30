@@ -79,10 +79,6 @@ class Employee extends Model
 		return $this->belongsTo(Employee::class, 'ReportsTo');
 	}
 
-	public function employees()
-	{
-		return $this->hasMany(Employee::class, 'ReportsTo');
-	}
 
 	public function employeeterritories()
 	{
@@ -93,4 +89,10 @@ class Employee extends Model
 	{
 		return $this->hasMany(Order::class, 'EmployeeID');
 	}
+
+	public function territories()
+    {
+        return $this->belongsToMany(Territory::class, 'employeeterritories', 'EmployeeID', 'TerritoryID');
+    }
+
 }
