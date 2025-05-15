@@ -15,6 +15,9 @@ use App\Http\Controllers\OrderController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/orders/prikaz', [OrderController::class, 'prikaz'])->name('orders.prikaz');
+Route::get('/orders/prikaz/{id}', [OrderController::class, 'prikazPoId']);
+Route::get('/regions/prikaz/{id}', [RegionController::class, 'prikazPoId']);
 
 Route::resource('categories', CategoryController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -53,6 +53,35 @@ class OrderController extends Controller
         return redirect()->route('orders.index')->with('success', 'Narudžba kreirana.');
     }
 
+    public function show($id)
+    {
+        $order = Order::with(['customer', 'employee', 'products'])->findOrFail($id);
+            return view('orders.show', compact('order'));
+    }
+
+    public function prikaz()
+    {
+        $orders = Order::with(['customer', 'employee', 'products'])->get();
+
+    // Pretvori u array i enkodiraj ručno
+        return response()->json(
+            json_decode(json_encode($orders, JSON_UNESCAPED_UNICODE), true)
+    );
+    }
+
+    public function prikazPoId($id)
+   {
+        try {
+             $order = Order::with(['customer', 'employee', 'products'])->findOrFail($id);
+             return response()->json($order);
+        } catch (\Exception $e) {
+             return response()->json(['error' => 'Data not found or error occurred', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
 
     public function edit($id)
     {

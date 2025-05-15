@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
+    // Web metode
     public function index()
     {
         $regions = Region::all();
@@ -37,6 +38,19 @@ class RegionController extends Controller
         return view('regions.show', compact('region'));
     }
 
+    public function prikazPoId($id)
+    {
+        try {
+            $region = Region::findOrFail($id);
+            return response()->json($region);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Regija nije pronađena ili je došlo do greške.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function edit(Region $region)
     {
         return view('regions.edit', compact('region'));
@@ -59,4 +73,5 @@ class RegionController extends Controller
 
         return redirect()->route('regions.index')->with('success', 'Region deleted successfully.');
     }
+
 }
