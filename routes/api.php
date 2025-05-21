@@ -1,14 +1,21 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryApiController; 
 use App\Http\Controllers\RegionApiController;
 use App\Http\Controllers\ShipperApiController;
 
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
 
 Route::get('/categories', [CategoryApiController::class, 'index']);
 Route::get('/categories/{id}', [CategoryApiController::class, 'show']);

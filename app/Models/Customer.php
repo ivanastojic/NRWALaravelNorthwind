@@ -37,7 +37,7 @@ class Customer extends Model
 	protected $primaryKey = 'CustomerID';
 	public $incrementing = false;
 	public $timestamps = false;
-	//protected $keyType = 'string';
+	protected $keyType = 'string';
 
 
 	protected $fillable = [

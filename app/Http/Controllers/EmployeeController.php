@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\Territory; // Dodan import za Territory model
+use App\Models\Territory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,14 +11,12 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        // Učitavanje zaposlenika zajedno s teritorijima
         $employees = Employee::with('territories')->get();
         return view('employees.index', compact('employees'));
     }
 
     public function create()
     {
-        // Učitavanje svih teritorija za kreiranje novog zaposlenika
         $territories = Territory::all();
         return view('employees.create', compact('territories'));
     }
@@ -33,12 +31,11 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($request->all());
 
-        // Povezivanje teritorija s novim zaposlenikom (ako postoje)
         if ($request->has('territories')) {
             $employee->territories()->sync($request->territories);
         }
 
-        return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
+        return redirect()->route('employees.index')->with('success', 'Zaposlenik uspješno dodan.');
     }
 
     public function show(Employee $employee)
@@ -49,7 +46,7 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        $territories = Territory::all(); // Svi teritoriji za formu
+        $territories = Territory::all();
 
         return view('employees.edit', compact('employee', 'territories'));
     }
@@ -58,27 +55,48 @@ class EmployeeController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        // Validacija podataka
         $request->validate([
+            'FirstName' => 'required|string|max:255',
+            'LastName' => 'required|string|max:255',
+            'Title' => 'nullable|string|max:255',
+            'HireDate' => 'nullable|date',
+            'BirthDate' => 'nullable|date',
+            'Address' => 'nullable|string|max:255',
+            'City' => 'nullable|string|max:255',
+            'Country' => 'nullable|string|max:255',
+            'HomePhone' => 'nullable|string|max:50',
+            'Notes' => 'required|string',
+            'Salary' => 'nullable|numeric',
             'territories' => 'array',
             'territories.*' => 'exists:territories,TerritoryID',
         ]);
 
-        // Ažuriraj teritorije zaposlenika
-        $employee->territories()->sync($request->territories); // sync će povezati teritorije s zaposlenikom
+        // Ažuriranje osnovnih podataka zaposlenika
+        $employee->update($request->only([
+            'FirstName',
+            'LastName',
+            'Title',
+            'HireDate',
+            'BirthDate',
+            'Address',
+            'City',
+            'Country',
+            'HomePhone',
+            'Notes',
+            'Salary'
+        ]));
+
+        // Ažuriranje teritorija
+        $employee->territories()->sync($request->territories);
 
         return redirect()->route('employees.index')->with('success', 'Zaposlenik i teritoriji ažurirani.');
     }
 
     public function destroy($id)
     {
-        // Prvo obriši povezane zapise u employeeterritories
         DB::table('employeeterritories')->where('EmployeeID', $id)->delete();
-
-        // Zatim obriši zaposlenika
         Employee::destroy($id);
 
         return redirect()->route('employees.index');
     }
-
 }
