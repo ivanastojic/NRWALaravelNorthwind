@@ -6,11 +6,12 @@
 
 namespace App\Models;
 
+use App\Models\Role;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+
+ 
 
 /**
  * Class User
@@ -28,7 +29,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable;
 
     protected $table = 'users';
 
@@ -46,6 +47,21 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
-        'remember_token'
+        'remember_token',
+        'role_id',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
+
+
+
+
 }

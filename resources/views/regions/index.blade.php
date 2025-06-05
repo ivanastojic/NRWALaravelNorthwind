@@ -19,7 +19,6 @@
                     <td>{{ $region->RegionDescription }}</td>
                     <td>
                         <a href="{{ route('regions.edit', $region) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{{ route('regions.show', $region) }}" class="btn btn-info btn-sm">Show</a>
                         <form action="{{ route('regions.destroy', $region) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
